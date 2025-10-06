@@ -1,25 +1,42 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36127.28 d17.14
+VisualStudioVersion = 17.14.36127.28
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Baluma.Emblue.ApiConsumer.App", "Baluma.Emblue.ApiConsumer.App.csproj", "{3694FC00-4318-4CEF-8C5E-7D5DAEA07B28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Baluma.Emblue.ApiConsumer.Domain", "src/Baluma.Emblue.ApiConsumer.Domain/Baluma.Emblue.ApiConsumer.Domain.csproj", "{FBFF813F-C0B9-41BD-BA06-2E9FC04AFFF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Baluma.Emblue.ApiConsumer.Application", "src/Baluma.Emblue.ApiConsumer.Application/Baluma.Emblue.ApiConsumer.Application.csproj", "{EFDD9754-249B-4629-A8C8-C7FC136CB255}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Baluma.Emblue.ApiConsumer.Infrastructure", "src/Baluma.Emblue.ApiConsumer.Infrastructure/Baluma.Emblue.ApiConsumer.Infrastructure.csproj", "{204742BA-D085-409F-A106-43E66EACCB1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Baluma.Emblue.ApiConsumer.Presentation.WinForms", "src/Baluma.Emblue.ApiConsumer.Presentation.WinForms/Baluma.Emblue.ApiConsumer.Presentation.WinForms.csproj", "{6C0F590A-4A05-4B4C-8233-42667A22C3AD}"
 EndProject
 Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3694FC00-4318-4CEF-8C5E-7D5DAEA07B28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3694FC00-4318-4CEF-8C5E-7D5DAEA07B28}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3694FC00-4318-4CEF-8C5E-7D5DAEA07B28}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3694FC00-4318-4CEF-8C5E-7D5DAEA07B28}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {B445905C-F61B-4CFE-A92A-4BEB7BE79135}
-	EndGlobalSection
+    GlobalSection(SolutionConfigurationPlatforms) = preSolution
+        Debug|Any CPU = Debug|Any CPU
+        Release|Any CPU = Release|Any CPU
+    EndGlobalSection
+    GlobalSection(ProjectConfigurationPlatforms) = postSolution
+        {FBFF813F-C0B9-41BD-BA06-2E9FC04AFFF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {FBFF813F-C0B9-41BD-BA06-2E9FC04AFFF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {FBFF813F-C0B9-41BD-BA06-2E9FC04AFFF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {FBFF813F-C0B9-41BD-BA06-2E9FC04AFFF0}.Release|Any CPU.Build.0 = Release|Any CPU
+        {EFDD9754-249B-4629-A8C8-C7FC136CB255}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {EFDD9754-249B-4629-A8C8-C7FC136CB255}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {EFDD9754-249B-4629-A8C8-C7FC136CB255}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {EFDD9754-249B-4629-A8C8-C7FC136CB255}.Release|Any CPU.Build.0 = Release|Any CPU
+        {204742BA-D085-409F-A106-43E66EACCB1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {204742BA-D085-409F-A106-43E66EACCB1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {204742BA-D085-409F-A106-43E66EACCB1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {204742BA-D085-409F-A106-43E66EACCB1B}.Release|Any CPU.Build.0 = Release|Any CPU
+        {6C0F590A-4A05-4B4C-8233-42667A22C3AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {6C0F590A-4A05-4B4C-8233-42667A22C3AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {6C0F590A-4A05-4B4C-8233-42667A22C3AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {6C0F590A-4A05-4B4C-8233-42667A22C3AD}.Release|Any CPU.Build.0 = Release|Any CPU
+    EndGlobalSection
+    GlobalSection(SolutionProperties) = preSolution
+        HideSolutionNode = FALSE
+    EndGlobalSection
+    GlobalSection(ExtensibilityGlobals) = postSolution
+        SolutionGuid = {1B61A09B-6BD2-402E-9565-9BB6CCD637A0}
+    EndGlobalSection
 EndGlobal
