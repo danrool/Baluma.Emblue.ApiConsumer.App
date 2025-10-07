@@ -57,14 +57,23 @@ public sealed class EmblueAutomaticReportClient : IAutomaticReportClient
 
     private void ConfigureHttpClient()
     {
-        var credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_options.Username}:{_options.Password}"));
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credentials);
+        if (!string.IsNullOrWhiteSpace(_options.ApiBearerToken))
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _options.ApiBearerToken);
+            return;
+        }
+
+        if (!string.IsNullOrEmpty(_options.Username) || !string.IsNullOrEmpty(_options.Password))
+        {
+            var credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_options.Username}:{_options.Password}"));
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credentials);
+        }
     }
 
     private static AutomaticReportFileDescriptor MapToDescriptor(AutomaticReportResponse response)
     {
         var url = new Uri(response.Url);
-        var fileName = Path.GetFileNameWithoutExtension(url.LocalPath);
+        var fileName = Path.GetFileName(url.LocalPath);
         return new AutomaticReportFileDescriptor(
             response.FileId,
             url,
