@@ -76,18 +76,20 @@ public sealed class ProcessDailyReportUseCase : IProcessDailyReportUseCase
 
             foreach (var descriptor in descriptors)
             {
+                await using var stream = await _automaticReportClient.DownloadReportAsync(descriptor, cancellationToken);
+                await _fileStorage.SaveAsync(stream, descriptor.FileName, cancellationToken);
+
                 if (!_parsers.TryGetValue(descriptor.ReportType, out var parser) || parser is null)
                 {
-                    _logger.LogWarning("No parser registered for report type {ReportType} ({FileName})", descriptor.ReportType, descriptor.FileName);
+                    _logger.LogWarning("No parser registered for report type {ReportType} ({FileName}). Report stored but not processed.", descriptor.ReportType, descriptor.FileName);
                     continue;
                 }
 
-                await using var stream = await _automaticReportClient.DownloadReportAsync(descriptor, cancellationToken);
-                await _fileStorage.SaveAsync(stream, descriptor.FileName, cancellationToken);
                 if (stream.CanSeek)
                 {
                     stream.Seek(0, SeekOrigin.Begin);
                 }
+
                 await parser.ParseAndPersistAsync(stream, cancellationToken);
                 processedCount++;
             }
