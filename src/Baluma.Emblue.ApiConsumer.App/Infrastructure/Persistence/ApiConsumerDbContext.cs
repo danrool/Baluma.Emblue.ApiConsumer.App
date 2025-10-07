@@ -20,6 +20,7 @@ public sealed class ApiConsumerDbContext : DbContext
 
         modelBuilder.Entity<DailyActivityDetail>(entity =>
         {
+            entity.ToTable("EMB_PRE_DailyActivityDetail");
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Email).HasMaxLength(256);
             entity.Property(e => e.Campaign).HasMaxLength(256);
@@ -35,6 +36,7 @@ public sealed class ApiConsumerDbContext : DbContext
 
         modelBuilder.Entity<DailyActionSummary>(entity =>
         {
+            entity.ToTable("EMB_PRE_DailyActionSummary");
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Campaign).HasMaxLength(256);
             entity.Property(e => e.Action).HasMaxLength(256);
@@ -66,6 +68,7 @@ public sealed class ApiConsumerDbContext : DbContext
 
         modelBuilder.Entity<TaskExecutionLog>(entity =>
         {
+            entity.ToTable("EMB_PRE_TaskExecutionLog");
             entity.HasKey(e => e.Id);
             entity.Property(e => e.TaskName).HasMaxLength(128);
             entity.Property(e => e.Parameters).HasMaxLength(512);

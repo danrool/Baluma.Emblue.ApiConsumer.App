@@ -57,3 +57,18 @@ BEGIN
     );
 END
 GO
+
+IF OBJECT_ID(N'[dbo].[EMB_PRE_TaskExecutionLog]', N'U') IS NULL
+BEGIN
+    CREATE TABLE [dbo].[EMB_PRE_TaskExecutionLog]
+    (
+        [Id] INT IDENTITY(1,1) NOT NULL CONSTRAINT [PK_EMB_PRE_TaskExecutionLog] PRIMARY KEY,
+        [TaskName] NVARCHAR(128) NOT NULL,
+        [Parameters] NVARCHAR(512) NULL,
+        [StartedAtUtc] DATETIME2(7) NOT NULL,
+        [CompletedAtUtc] DATETIME2(7) NULL,
+        [Status] NVARCHAR(32) NOT NULL,
+        [Message] NVARCHAR(1024) NULL
+    );
+END
+GO
