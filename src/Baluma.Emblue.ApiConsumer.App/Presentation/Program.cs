@@ -7,7 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using NLog.Extensions.Hosting;
+using NLog.Extensions.Logging;
+using WinFormsApplication = System.Windows.Forms.Application;
+using WinFormsApplicationConfiguration = System.Windows.Forms.ApplicationConfiguration;
 
 namespace Baluma.Emblue.ApiConsumer.App.Presentation;
 
@@ -19,11 +21,11 @@ internal static class Program
         var builder = Host.CreateApplicationBuilder(args);
         builder.Logging.ClearProviders();
         builder.Logging.SetMinimumLevel(LogLevel.Information);
-        builder.Host.UseNLog();
+        builder.Logging.AddNLog();
         ConfigureConfiguration(builder.Configuration, builder.Environment);
         ConfigureServices(builder.Services, builder.Configuration);
 
-        await using var host = builder.Build();
+        using var host = builder.Build();
         await EnsureDatabaseAsync(host.Services);
 
         if (await TryExecuteFromCommandLineAsync(args, host.Services))
@@ -31,13 +33,13 @@ internal static class Program
             return;
         }
 
-        ApplicationConfiguration.Initialize();
+        WinFormsApplicationConfiguration.Initialize();
         using var scope = host.Services.CreateScope();
         var mainForm = scope.ServiceProvider.GetRequiredService<MainForm>();
-        Application.Run(mainForm);
+        WinFormsApplication.Run(mainForm);
     }
 
-    private static void ConfigureConfiguration(ConfigurationManager configuration, HostApplicationBuilderEnvironment environment)
+    private static void ConfigureConfiguration(ConfigurationManager configuration, IHostEnvironment environment)
     {
         configuration.Sources.Clear();
         configuration
