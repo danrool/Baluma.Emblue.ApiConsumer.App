@@ -1,7 +1,9 @@
+using Baluma.Emblue.ApiConsumer.Application.Abstractions;
 using Baluma.Emblue.ApiConsumer.Application.Reports.Parsers;
 using Baluma.Emblue.ApiConsumer.Application.Reports.UseCases;
 using Baluma.Emblue.ApiConsumer.Infrastructure.Extensions;
 using Baluma.Emblue.ApiConsumer.Infrastructure.Persistence;
+using Baluma.Emblue.ApiConsumer.App.Presentation.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -53,6 +55,7 @@ internal static class Program
     private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         services.AddInfrastructure(configuration);
+        services.AddScoped<IDuplicateDataHandler, DesktopDuplicateDataHandler>();
         services.AddScoped<IReportContentParser, DailyActivityDetailReportParser>();
         services.AddScoped<IReportContentParser, DailyActionSummaryReportParser>();
         services.AddScoped<IProcessDailyReportUseCase, ProcessDailyReportUseCase>();
@@ -84,7 +87,7 @@ internal static class Program
 
             await using var scope = services.CreateAsyncScope();
             var useCase = scope.ServiceProvider.GetRequiredService<IProcessDailyReportUseCase>();
-            await useCase.ExecuteAsync(date, CancellationToken.None);
+            await useCase.ExecuteAsync(date, isAutomaticExecution: true, CancellationToken.None);
             Environment.ExitCode = 0;
             return true;
         }

@@ -38,4 +38,11 @@ public sealed class TaskExecutionLog
         Message = message;
         CompletedAtUtc = completedAtUtc;
     }
+
+    public void MarkCancelled(string message, DateTime completedAtUtc)
+    {
+        Status = "Cancelled";
+        Message = message;
+        CompletedAtUtc = completedAtUtc;
+    }
 }

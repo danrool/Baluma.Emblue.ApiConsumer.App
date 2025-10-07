@@ -29,7 +29,7 @@ public partial class MainForm : Form
             DateOnly? selectedDate = datePicker.Checked
                 ? DateOnly.FromDateTime(datePicker.Value.Date)
                 : null;
-            await _processDailyReportUseCase.ExecuteAsync(selectedDate, CancellationToken.None);
+            await _processDailyReportUseCase.ExecuteAsync(selectedDate, isAutomaticExecution: false, CancellationToken.None);
             statusLabel.Text = "Proceso finalizado correctamente.";
         }
         catch (Exception ex)
