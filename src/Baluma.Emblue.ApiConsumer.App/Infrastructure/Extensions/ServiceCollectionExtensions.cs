@@ -25,7 +25,7 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<ApiConsumerDbContext>((serviceProvider, options) =>
         {
             var databaseOptions = serviceProvider.GetRequiredService<IOptions<DatabaseOptions>>().Value;
-            options.UseSqlite(databaseOptions.ConnectionString);
+            options.UseSqlServer(databaseOptions.ConnectionString);
         });
 
         services.AddScoped<IDailyReportRepository, DailyReportRepository>();
