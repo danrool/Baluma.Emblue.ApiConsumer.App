@@ -25,6 +25,13 @@ Edite el archivo `src/Baluma.Emblue.ApiConsumer.App/appsettings.json` y complete
 - `FileStorage:Folder`: Carpeta donde se guardarán los archivos descargados.
 - `FileStorage:Domain`, `Username` y `Password`: Credenciales para impersonar al usuario con acceso a la carpeta (opcional).
 
+### Scripts de base de datos
+
+En la carpeta `scripts/` se incluye el archivo `update_to_ods_schema.sql` con todas las consultas necesarias para preparar o
+actualizar las tablas utilizadas por la aplicación. El script es idempotente, crea el esquema `ods` si hace falta, renombra las
+tablas antiguas (`EMB_PRE_*`), agrega las nuevas dependencias (`emblue_TaskExecutionFile`) y ajusta columnas, claves foráneas e
+índices según el modelo de EF Core. Ejecútelo sobre la base de datos SQL Server antes de poner en marcha la aplicación.
+
 ## Ejecución por línea de comandos
 
 ```
