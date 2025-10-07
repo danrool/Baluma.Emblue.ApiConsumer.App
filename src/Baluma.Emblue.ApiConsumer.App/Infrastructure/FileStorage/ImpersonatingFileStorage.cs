@@ -59,20 +59,20 @@ public sealed class ImpersonatingFileStorage : IFileStorage
             }
 
             await using var fileStream = new FileStream(targetPath, FileMode.Create, FileAccess.Write, FileShare.None, 81920, useAsync: true);
-            await content.CopyToAsync(fileStream, cancellationToken);
+            await content.CopyToAsync(fileStream, cancellationToken).ConfigureAwait(false);
 
             if (content.CanSeek)
             {
                 content.Seek(0, SeekOrigin.Begin);
             }
-        });
+        }).ConfigureAwait(false);
     }
 
     private async Task RunWithImpersonationAsync(Func<Task> action)
     {
         if (string.IsNullOrWhiteSpace(_options.Username) || string.IsNullOrWhiteSpace(_options.Password))
         {
-            await action();
+            await action().ConfigureAwait(false);
             return;
         }
 
@@ -84,7 +84,7 @@ public sealed class ImpersonatingFileStorage : IFileStorage
 
         using (accessToken)
         {
-            WindowsIdentity.RunImpersonated(accessToken, () => action().GetAwaiter().GetResult());
+            WindowsIdentity.RunImpersonated(accessToken, () => action().ConfigureAwait(false).GetAwaiter().GetResult());
         }
     }
 
