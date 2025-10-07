@@ -84,7 +84,10 @@ public sealed class ImpersonatingFileStorage : IFileStorage
 
         using (accessToken)
         {
-            WindowsIdentity.RunImpersonated(accessToken, () => action().ConfigureAwait(false).GetAwaiter().GetResult());
+            await Task.Run(() =>
+            {
+                WindowsIdentity.RunImpersonated(accessToken, () => action().ConfigureAwait(false).GetAwaiter().GetResult());
+            }).ConfigureAwait(false);
         }
     }
 
