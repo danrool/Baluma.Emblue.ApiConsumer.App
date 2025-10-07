@@ -1,6 +1,7 @@
 using Baluma.Emblue.ApiConsumer.Application.Abstractions;
 using Baluma.Emblue.ApiConsumer.Infrastructure.AutomaticReports;
 using Baluma.Emblue.ApiConsumer.Infrastructure.Configuration;
+using Baluma.Emblue.ApiConsumer.Infrastructure.FileStorage;
 using Baluma.Emblue.ApiConsumer.Infrastructure.Persistence;
 using Baluma.Emblue.ApiConsumer.Infrastructure.TaskExecution;
 using Baluma.Emblue.ApiConsumer.Infrastructure.Time;
@@ -17,6 +18,7 @@ public static class ServiceCollectionExtensions
     {
         services.Configure<AutomaticReportOptions>(configuration.GetSection(AutomaticReportOptions.SectionName));
         services.Configure<DatabaseOptions>(configuration.GetSection(DatabaseOptions.SectionName));
+        services.Configure<FileStorageOptions>(configuration.GetSection(FileStorageOptions.SectionName));
 
         services.AddHttpClient<IAutomaticReportClient, EmblueAutomaticReportClient>();
 
@@ -28,6 +30,7 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IDailyReportRepository, DailyReportRepository>();
         services.AddScoped<ITaskExecutionLogRepository, TaskExecutionLogRepository>();
+        services.AddSingleton<IFileStorage, ImpersonatingFileStorage>();
         services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
 
         return services;

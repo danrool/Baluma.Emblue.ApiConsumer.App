@@ -19,8 +19,11 @@ Edite el archivo `src/Baluma.Emblue.ApiConsumer.App/appsettings.json` y complete
 
 - `AutomaticReports:BaseUrl`: URL base de la API (se provee un valor por defecto).
 - `AutomaticReports:ReportsEndpoint`: Endpoint para solicitar los reportes automáticos.
-- `AutomaticReports:Username` y `Password`: Credenciales de acceso.
+- `AutomaticReports:ApiBearerToken`: Token Bearer para autenticar la API (opcional). Si se especifica, se utilizará en lugar de usuario y contraseña.
+- `AutomaticReports:Username` y `Password`: Credenciales de acceso para autenticación básica (solo si no se usa `ApiBearerToken`).
 - `Database:ConnectionString`: cadena de conexión SQLite donde se almacenarán los datos procesados.
+- `FileStorage:Folder`: Carpeta donde se guardarán los archivos descargados.
+- `FileStorage:Domain`, `Username` y `Password`: Credenciales para impersonar al usuario con acceso a la carpeta (opcional).
 
 ## Ejecución por línea de comandos
 
