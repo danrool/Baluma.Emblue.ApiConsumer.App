@@ -1,7 +1,7 @@
 using Baluma.Emblue.ApiConsumer.Application.Reports.UseCases;
 using Microsoft.Extensions.Logging;
 
-namespace Baluma.Emblue.ApiConsumer.Presentation.WinForms;
+namespace Baluma.Emblue.ApiConsumer.App.Presentation;
 
 public partial class MainForm : Form
 {
