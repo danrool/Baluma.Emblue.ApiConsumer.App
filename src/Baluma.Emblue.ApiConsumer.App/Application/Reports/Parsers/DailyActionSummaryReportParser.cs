@@ -19,7 +19,7 @@ public sealed class DailyActionSummaryReportParser : IReportContentParser
 
     public AutomaticReportType ReportType => AutomaticReportType.DailyActionSummary;
 
-    public async Task ParseAndPersistAsync(Stream reportStream, CancellationToken cancellationToken)
+    public async Task ParseAndPersistAsync(Stream reportStream, int taskExecutionFileId, CancellationToken cancellationToken)
     {
         if (reportStream.CanSeek)
         {
@@ -54,6 +54,7 @@ public sealed class DailyActionSummaryReportParser : IReportContentParser
 
                 summaries.Add(new DailyActionSummary
                 {
+                    TaskExecutionFileId = taskExecutionFileId,
                     Campaign = columns[0],
                     Action = columns[1],
                     Type = columns[2],
@@ -87,7 +88,7 @@ public sealed class DailyActionSummaryReportParser : IReportContentParser
 
         if (summaries.Count > 0)
         {
-            await _repository.SaveDailyActionSummariesAsync(summaries, cancellationToken);
+            await _repository.SaveDailyActionSummariesAsync(taskExecutionFileId, summaries, cancellationToken);
         }
     }
 

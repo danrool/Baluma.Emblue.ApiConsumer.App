@@ -3,6 +3,7 @@ namespace Baluma.Emblue.ApiConsumer.Domain.Reports;
 public sealed class DailyActivityDetail
 {
     public int Id { get; set; }
+    public int TaskExecutionFileId { get; set; }
     public string Email { get; set; } = string.Empty;
     public DateTime? SendDate { get; set; }
     public DateTime? ActivityDate { get; set; }

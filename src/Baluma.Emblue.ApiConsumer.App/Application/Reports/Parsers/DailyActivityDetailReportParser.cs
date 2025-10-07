@@ -19,7 +19,7 @@ public sealed class DailyActivityDetailReportParser : IReportContentParser
 
     public AutomaticReportType ReportType => AutomaticReportType.DailyActivityDetail;
 
-    public async Task ParseAndPersistAsync(Stream reportStream, CancellationToken cancellationToken)
+    public async Task ParseAndPersistAsync(Stream reportStream, int taskExecutionFileId, CancellationToken cancellationToken)
     {
         if (reportStream.CanSeek)
         {
@@ -54,6 +54,7 @@ public sealed class DailyActivityDetailReportParser : IReportContentParser
 
                 details.Add(new DailyActivityDetail
                 {
+                    TaskExecutionFileId = taskExecutionFileId,
                     Email = columns[0],
                     SendDate = ParseDateTime(columns[1]),
                     ActivityDate = ParseDateTime(columns[2]),
@@ -72,7 +73,7 @@ public sealed class DailyActivityDetailReportParser : IReportContentParser
 
         if (details.Count > 0)
         {
-            await _repository.SaveDailyActivityDetailsAsync(details, cancellationToken);
+            await _repository.SaveDailyActivityDetailsAsync(taskExecutionFileId, details, cancellationToken);
         }
     }
 

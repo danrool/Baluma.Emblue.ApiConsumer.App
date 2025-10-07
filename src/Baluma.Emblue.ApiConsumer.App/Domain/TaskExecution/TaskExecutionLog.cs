@@ -13,6 +13,7 @@ public sealed class TaskExecutionLog
     public DateTime? CompletedAtUtc { get; private set; }
     public string Status { get; private set; } = string.Empty;
     public string? Message { get; private set; }
+    public ICollection<TaskExecutionFile> Files { get; private set; } = new List<TaskExecutionFile>();
 
     public static TaskExecutionLog Start(string taskName, string? parameters, DateTime startedAtUtc)
     {

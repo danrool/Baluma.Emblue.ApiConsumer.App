@@ -3,6 +3,7 @@ namespace Baluma.Emblue.ApiConsumer.Domain.Reports;
 public sealed class DailyActionSummary
 {
     public int Id { get; set; }
+    public int TaskExecutionFileId { get; set; }
     public string Campaign { get; set; } = string.Empty;
     public string Action { get; set; } = string.Empty;
     public string Type { get; set; } = string.Empty;

@@ -85,12 +85,19 @@ public sealed class ProcessDailyReportUseCase : IProcessDailyReportUseCase
                     continue;
                 }
 
+                var taskExecutionFileId = await _dailyReportRepository.EnsureReportFileAsync(
+                    descriptor,
+                    targetDate,
+                    executionLog.Id,
+                    cancellationToken);
+
                 if (stream.CanSeek)
                 {
                     stream.Seek(0, SeekOrigin.Begin);
                 }
 
-                await parser.ParseAndPersistAsync(stream, cancellationToken);
+                await parser.ParseAndPersistAsync(stream, taskExecutionFileId, cancellationToken);
+                await _dailyReportRepository.MarkReportFileAsProcessedAsync(taskExecutionFileId, _dateTimeProvider.UtcNow, cancellationToken);
                 processedCount++;
             }
 
