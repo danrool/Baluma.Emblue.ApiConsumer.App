@@ -26,7 +26,9 @@ public partial class MainForm : Form
         {
             ToggleProcessing(true);
             statusLabel.Text = "Procesando reporte diario...";
-            var selectedDate = datePicker.Checked ? DateOnly.FromDateTime(datePicker.Value.Date) : null;
+            DateOnly? selectedDate = datePicker.Checked
+                ? DateOnly.FromDateTime(datePicker.Value.Date)
+                : null;
             await _processDailyReportUseCase.ExecuteAsync(selectedDate, CancellationToken.None);
             statusLabel.Text = "Proceso finalizado correctamente.";
         }

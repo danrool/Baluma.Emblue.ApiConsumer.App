@@ -9,7 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using WinFormsApplication = System.Windows.Forms.Application;
-using WinFormsApplicationConfiguration = System.Windows.Forms.ApplicationConfiguration;
+using WinFormsHighDpiMode = System.Windows.Forms.HighDpiMode;
 
 namespace Baluma.Emblue.ApiConsumer.App.Presentation;
 
@@ -33,7 +33,9 @@ internal static class Program
             return;
         }
 
-        WinFormsApplicationConfiguration.Initialize();
+        WinFormsApplication.SetHighDpiMode(WinFormsHighDpiMode.SystemAware);
+        WinFormsApplication.EnableVisualStyles();
+        WinFormsApplication.SetCompatibleTextRenderingDefault(false);
         using var scope = host.Services.CreateScope();
         var mainForm = scope.ServiceProvider.GetRequiredService<MainForm>();
         WinFormsApplication.Run(mainForm);
