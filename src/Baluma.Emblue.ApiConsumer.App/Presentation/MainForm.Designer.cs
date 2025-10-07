@@ -1,4 +1,4 @@
-namespace Baluma.Emblue.ApiConsumer.Presentation.WinForms;
+namespace Baluma.Emblue.ApiConsumer.App.Presentation;
 
 partial class MainForm
 {

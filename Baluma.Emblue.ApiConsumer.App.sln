@@ -2,13 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36127.28
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Baluma.Emblue.ApiConsumer.Domain", "src/Baluma.Emblue.ApiConsumer.Domain/Baluma.Emblue.ApiConsumer.Domain.csproj", "{FBFF813F-C0B9-41BD-BA06-2E9FC04AFFF0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Baluma.Emblue.ApiConsumer.Application", "src/Baluma.Emblue.ApiConsumer.Application/Baluma.Emblue.ApiConsumer.Application.csproj", "{EFDD9754-249B-4629-A8C8-C7FC136CB255}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Baluma.Emblue.ApiConsumer.Infrastructure", "src/Baluma.Emblue.ApiConsumer.Infrastructure/Baluma.Emblue.ApiConsumer.Infrastructure.csproj", "{204742BA-D085-409F-A106-43E66EACCB1B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Baluma.Emblue.ApiConsumer.Presentation.WinForms", "src/Baluma.Emblue.ApiConsumer.Presentation.WinForms/Baluma.Emblue.ApiConsumer.Presentation.WinForms.csproj", "{6C0F590A-4A05-4B4C-8233-42667A22C3AD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Baluma.Emblue.ApiConsumer.App", "src/Baluma.Emblue.ApiConsumer.App/Baluma.Emblue.ApiConsumer.App.csproj", "{DE6B74E6-9324-4E1B-A32E-2AE4B4BF1D59}"
 EndProject
 Global
     GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,22 +10,10 @@ Global
         Release|Any CPU = Release|Any CPU
     EndGlobalSection
     GlobalSection(ProjectConfigurationPlatforms) = postSolution
-        {FBFF813F-C0B9-41BD-BA06-2E9FC04AFFF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-        {FBFF813F-C0B9-41BD-BA06-2E9FC04AFFF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-        {FBFF813F-C0B9-41BD-BA06-2E9FC04AFFF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-        {FBFF813F-C0B9-41BD-BA06-2E9FC04AFFF0}.Release|Any CPU.Build.0 = Release|Any CPU
-        {EFDD9754-249B-4629-A8C8-C7FC136CB255}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-        {EFDD9754-249B-4629-A8C8-C7FC136CB255}.Debug|Any CPU.Build.0 = Debug|Any CPU
-        {EFDD9754-249B-4629-A8C8-C7FC136CB255}.Release|Any CPU.ActiveCfg = Release|Any CPU
-        {EFDD9754-249B-4629-A8C8-C7FC136CB255}.Release|Any CPU.Build.0 = Release|Any CPU
-        {204742BA-D085-409F-A106-43E66EACCB1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-        {204742BA-D085-409F-A106-43E66EACCB1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-        {204742BA-D085-409F-A106-43E66EACCB1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-        {204742BA-D085-409F-A106-43E66EACCB1B}.Release|Any CPU.Build.0 = Release|Any CPU
-        {6C0F590A-4A05-4B4C-8233-42667A22C3AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-        {6C0F590A-4A05-4B4C-8233-42667A22C3AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-        {6C0F590A-4A05-4B4C-8233-42667A22C3AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-        {6C0F590A-4A05-4B4C-8233-42667A22C3AD}.Release|Any CPU.Build.0 = Release|Any CPU
+        {DE6B74E6-9324-4E1B-A32E-2AE4B4BF1D59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {DE6B74E6-9324-4E1B-A32E-2AE4B4BF1D59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {DE6B74E6-9324-4E1B-A32E-2AE4B4BF1D59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {DE6B74E6-9324-4E1B-A32E-2AE4B4BF1D59}.Release|Any CPU.Build.0 = Release|Any CPU
     EndGlobalSection
     GlobalSection(SolutionProperties) = preSolution
         HideSolutionNode = FALSE

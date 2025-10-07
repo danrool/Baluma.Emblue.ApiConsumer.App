@@ -6,8 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Hosting;
 
-namespace Baluma.Emblue.ApiConsumer.Presentation.WinForms;
+namespace Baluma.Emblue.ApiConsumer.App.Presentation;
 
 internal static class Program
 {
@@ -15,6 +17,9 @@ internal static class Program
     private static async Task Main(string[] args)
     {
         var builder = Host.CreateApplicationBuilder(args);
+        builder.Logging.ClearProviders();
+        builder.Logging.SetMinimumLevel(LogLevel.Information);
+        builder.Host.UseNLog();
         ConfigureConfiguration(builder.Configuration, builder.Environment);
         ConfigureServices(builder.Services, builder.Configuration);
 
@@ -43,7 +48,6 @@ internal static class Program
 
     private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddLogging();
         services.AddInfrastructure(configuration);
         services.AddScoped<IReportContentParser, DailyActivityDetailReportParser>();
         services.AddScoped<IReportContentParser, DailyActionSummaryReportParser>();
