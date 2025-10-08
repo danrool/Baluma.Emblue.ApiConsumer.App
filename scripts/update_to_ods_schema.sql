@@ -308,3 +308,129 @@ BEGIN
         ON DELETE CASCADE;
 END;
 GO
+
+------------------------------------------------------------
+-- 7. Create ods.vw_emblue_CampaignActivitySummary view
+------------------------------------------------------------
+IF OBJECT_ID(N'[ods].[vw_emblue_CampaignActivitySummary]', N'V') IS NOT NULL
+BEGIN
+    DROP VIEW [ods].[vw_emblue_CampaignActivitySummary];
+END;
+GO
+
+DECLARE @ActivityNames TABLE (Name NVARCHAR(128) PRIMARY KEY);
+
+INSERT INTO @ActivityNames (Name)
+SELECT DISTINCT
+    CASE
+        WHEN Activity = N'Rebote' AND BounceCode IN (511, 512, 513, 520, 521, 530, 541, 543, 544, 546, 550, 570, 571, 572, 573, 575, 576) THEN N'Rebote Duro'
+        WHEN Activity = N'Rebote' AND BounceCode IN (500, 522, 532) THEN N'Rebote Blando'
+        WHEN Activity = N'Rebote' THEN N'Rebote'
+        ELSE Activity
+    END AS ActivityGroup
+FROM (
+    SELECT
+        Activity,
+        CASE
+            WHEN Activity = N'Rebote' THEN
+                TRY_CONVERT(
+                    INT,
+                    LTRIM(RTRIM(
+                        LEFT(
+                            COALESCE(Description, N''),
+                            NULLIF(CHARINDEX(N'-', COALESCE(Description, N'') + N'-'), 0) - 1
+                        )
+                    ))
+                )
+            ELSE NULL
+        END AS BounceCode
+    FROM [ods].[emblue_DailyActivityDetail]
+) AS Source;
+
+IF NOT EXISTS (SELECT 1 FROM @ActivityNames WHERE Name = N'Rebote Blando')
+BEGIN
+    INSERT INTO @ActivityNames (Name) VALUES (N'Rebote Blando');
+END;
+
+IF NOT EXISTS (SELECT 1 FROM @ActivityNames WHERE Name = N'Rebote Duro')
+BEGIN
+    INSERT INTO @ActivityNames (Name) VALUES (N'Rebote Duro');
+END;
+
+DECLARE @PivotColumns NVARCHAR(MAX);
+DECLARE @SelectColumns NVARCHAR(MAX);
+
+SELECT @PivotColumns = STRING_AGG(QUOTENAME(Name), N',') WITHIN GROUP (ORDER BY Name)
+FROM @ActivityNames;
+
+SELECT @SelectColumns = STRING_AGG(N'    ,ISNULL(p.' + QUOTENAME(Name) + N', 0) AS ' + QUOTENAME(Name), CHAR(10)) WITHIN GROUP (ORDER BY Name)
+FROM @ActivityNames;
+
+IF @PivotColumns IS NULL OR LEN(@PivotColumns) = 0
+BEGIN
+    SET @PivotColumns = N'[Rebote Blando],[Rebote Duro]';
+    SET @SelectColumns = N'    ,ISNULL(p.[Rebote Blando], 0) AS [Rebote Blando]' + CHAR(10)
+        + N'    ,ISNULL(p.[Rebote Duro], 0) AS [Rebote Duro]';
+END;
+
+DECLARE @Sql NVARCHAR(MAX) = N'CREATE VIEW [ods].[vw_emblue_CampaignActivitySummary] AS
+WITH Raw AS (
+    SELECT
+        Campaign,
+        [Action],
+        Email,
+        Account,
+        Activity,
+        Description,
+        CASE
+            WHEN Activity = N''Rebote'' THEN
+                TRY_CONVERT(
+                    INT,
+                    LTRIM(RTRIM(
+                        LEFT(
+                            COALESCE(Description, N''''),
+                            NULLIF(CHARINDEX(N''-'', COALESCE(Description, N'''') + N''-''), 0) - 1
+                        )
+                    ))
+                )
+            ELSE NULL
+        END AS BounceCode
+    FROM [ods].[emblue_DailyActivityDetail]
+), Source AS (
+    SELECT
+        Campaign,
+        [Action],
+        Email,
+        Account,
+        CASE
+            WHEN Activity = N''Rebote'' AND BounceCode IN (511, 512, 513, 520, 521, 530, 541, 543, 544, 546, 550, 570, 571, 572, 573, 575, 576) THEN N''Rebote Duro''
+            WHEN Activity = N''Rebote'' AND BounceCode IN (500, 522, 532) THEN N''Rebote Blando''
+            WHEN Activity = N''Rebote'' THEN N''Rebote''
+            ELSE Activity
+        END AS ActivityGroup
+    FROM Raw
+)
+SELECT
+    p.Campaign,
+    p.[Action],
+    p.Email,
+    p.Account' + CASE
+        WHEN @SelectColumns IS NULL OR LEN(@SelectColumns) = 0 THEN N''
+        ELSE CHAR(10) + @SelectColumns
+    END + CHAR(10) + N'FROM (
+    SELECT
+        Campaign,
+        [Action],
+        Email,
+        Account,
+        ActivityGroup
+    FROM Source
+) AS src
+PIVOT (
+    COUNT_BIG(ActivityGroup)
+    FOR ActivityGroup IN (' + @PivotColumns + N')
+) AS p;';
+
+EXEC sys.sp_executesql @Sql;
+GO
+
