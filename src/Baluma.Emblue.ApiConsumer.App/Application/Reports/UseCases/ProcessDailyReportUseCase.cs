@@ -76,8 +76,13 @@ public sealed class ProcessDailyReportUseCase : IProcessDailyReportUseCase
 
             foreach (var descriptor in descriptors)
             {
-                await using var stream = await _automaticReportClient.DownloadReportAsync(descriptor, cancellationToken);
-                await _fileStorage.SaveAsync(stream, descriptor.FileName, cancellationToken);
+                var (stream, downloadedFromApi) = await GetReportStreamAsync(descriptor, cancellationToken);
+                await using var reportStream = stream;
+
+                if (downloadedFromApi)
+                {
+                    await _fileStorage.SaveAsync(reportStream, descriptor.FileName, cancellationToken);
+                }
 
                 if (!_parsers.TryGetValue(descriptor.ReportType, out var parser) || parser is null)
                 {
@@ -91,12 +96,12 @@ public sealed class ProcessDailyReportUseCase : IProcessDailyReportUseCase
                     executionLog.Id,
                     cancellationToken);
 
-                if (stream.CanSeek)
+                if (reportStream.CanSeek)
                 {
-                    stream.Seek(0, SeekOrigin.Begin);
+                    reportStream.Seek(0, SeekOrigin.Begin);
                 }
 
-                await parser.ParseAndPersistAsync(stream, taskExecutionFileId, cancellationToken);
+                await parser.ParseAndPersistAsync(reportStream, taskExecutionFileId, cancellationToken);
                 await _dailyReportRepository.MarkReportFileAsProcessedAsync(taskExecutionFileId, _dateTimeProvider.UtcNow, cancellationToken);
                 processedCount++;
             }
@@ -110,6 +115,28 @@ public sealed class ProcessDailyReportUseCase : IProcessDailyReportUseCase
             executionLog.MarkFailed(ex.Message, _dateTimeProvider.UtcNow);
             await _taskExecutionLogRepository.UpdateAsync(executionLog, cancellationToken);
             throw;
+        }
+    }
+
+    private async Task<(Stream Stream, bool DownloadedFromApi)> GetReportStreamAsync(AutomaticReportFileDescriptor descriptor, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var stream = await _automaticReportClient.DownloadReportAsync(descriptor, cancellationToken);
+            return (stream, true);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to download report {FileName} (ID: {FileId}). Attempting to use a previously stored copy.", descriptor.FileName, descriptor.FileId);
+
+            if (!await _fileStorage.ExistsAsync(descriptor.FileName, cancellationToken))
+            {
+                throw new InvalidOperationException($"No se pudo descargar el archivo {descriptor.FileName} y no existe una copia local previa.", ex);
+            }
+
+            _logger.LogInformation("Using previously stored report {FileName} (ID: {FileId}).", descriptor.FileName, descriptor.FileId);
+            var localStream = await _fileStorage.OpenReadAsync(descriptor.FileName, cancellationToken);
+            return (localStream, false);
         }
     }
 }

@@ -68,6 +68,67 @@ public sealed class ImpersonatingFileStorage : IFileStorage
         }).ConfigureAwait(false);
     }
 
+    public async Task<bool> ExistsAsync(string fileName, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            throw new ArgumentException("File name must be provided.", nameof(fileName));
+        }
+
+        if (string.IsNullOrWhiteSpace(_options.Folder))
+        {
+            throw new InvalidOperationException("File storage folder is not configured.");
+        }
+
+        fileName = Path.GetFileName(fileName);
+        var targetPath = Path.Combine(_options.Folder, fileName);
+        var exists = false;
+
+        await RunWithImpersonationAsync(() =>
+        {
+            exists = File.Exists(targetPath);
+            return Task.CompletedTask;
+        }).ConfigureAwait(false);
+
+        return exists;
+    }
+
+    public async Task<Stream> OpenReadAsync(string fileName, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            throw new ArgumentException("File name must be provided.", nameof(fileName));
+        }
+
+        if (string.IsNullOrWhiteSpace(_options.Folder))
+        {
+            throw new InvalidOperationException("File storage folder is not configured.");
+        }
+
+        fileName = Path.GetFileName(fileName);
+        var targetPath = Path.Combine(_options.Folder, fileName);
+        MemoryStream? memoryStream = null;
+
+        await RunWithImpersonationAsync(async () =>
+        {
+            if (!File.Exists(targetPath))
+            {
+                throw new FileNotFoundException("Stored file not found.", targetPath);
+            }
+
+            await using var fileStream = new FileStream(targetPath, FileMode.Open, FileAccess.Read, FileShare.Read, 81920, useAsync: true);
+            memoryStream = new MemoryStream();
+            await fileStream.CopyToAsync(memoryStream, cancellationToken).ConfigureAwait(false);
+
+            if (memoryStream.CanSeek)
+            {
+                memoryStream.Seek(0, SeekOrigin.Begin);
+            }
+        }).ConfigureAwait(false);
+
+        return memoryStream ?? throw new InvalidOperationException($"Failed to load stored file '{fileName}'.");
+    }
+
     private async Task RunWithImpersonationAsync(Func<Task> action)
     {
         if (string.IsNullOrWhiteSpace(_options.Username) || string.IsNullOrWhiteSpace(_options.Password))
