@@ -63,6 +63,10 @@ public sealed class DailyReportRepository : IDailyReportRepository
         IEnumerable<DailyActivityDetail> details,
         CancellationToken cancellationToken)
     {
+        await _dbContext.DailyActivityDetails
+            .Where(detail => detail.TaskExecutionFileId == taskExecutionFileId)
+            .ExecuteDeleteAsync(cancellationToken);
+
         var detailList = details.ToList();
         if (detailList.Count == 0)
         {
@@ -74,10 +78,6 @@ public sealed class DailyReportRepository : IDailyReportRepository
             detail.TaskExecutionFileId = taskExecutionFileId;
         }
 
-        await _dbContext.DailyActivityDetails
-            .Where(detail => detail.TaskExecutionFileId == taskExecutionFileId)
-            .ExecuteDeleteAsync(cancellationToken);
-
         await _dbContext.DailyActivityDetails.AddRangeAsync(detailList, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
@@ -87,6 +87,10 @@ public sealed class DailyReportRepository : IDailyReportRepository
         IEnumerable<DailyActionSummary> summaries,
         CancellationToken cancellationToken)
     {
+        await _dbContext.DailyActionSummaries
+            .Where(summary => summary.TaskExecutionFileId == taskExecutionFileId)
+            .ExecuteDeleteAsync(cancellationToken);
+
         var summaryList = summaries.ToList();
         if (summaryList.Count == 0)
         {
@@ -97,10 +101,6 @@ public sealed class DailyReportRepository : IDailyReportRepository
         {
             summary.TaskExecutionFileId = taskExecutionFileId;
         }
-
-        await _dbContext.DailyActionSummaries
-            .Where(summary => summary.TaskExecutionFileId == taskExecutionFileId)
-            .ExecuteDeleteAsync(cancellationToken);
 
         await _dbContext.DailyActionSummaries.AddRangeAsync(summaryList, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
