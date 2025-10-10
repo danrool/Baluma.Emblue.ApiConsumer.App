@@ -108,23 +108,24 @@ public sealed class DailyReportRepository : IDailyReportRepository
 
     public async Task<bool> ExistsDataForDateAsync(DateOnly date, CancellationToken cancellationToken)
     {
-        var start = date.ToDateTime(TimeOnly.MinValue);
-        var end = start.AddDays(1);
-
-        var hasDetails = await _dbContext.DailyActivityDetails.AnyAsync(
-            detail =>
-                (detail.ActivityDate.HasValue && detail.ActivityDate >= start && detail.ActivityDate < end) ||
-                (detail.SendDate.HasValue && detail.SendDate >= start && detail.SendDate < end),
-            cancellationToken);
+        var hasDetails = await (from detail in _dbContext.DailyActivityDetails
+                join taskExecutionFile in _dbContext.TaskExecutionFiles
+                    on detail.TaskExecutionFileId equals taskExecutionFile.Id
+                where taskExecutionFile.ReportDate == date
+                select detail.Id)
+            .AnyAsync(cancellationToken);
 
         if (hasDetails)
         {
             return true;
         }
 
-        var hasSummaries = await _dbContext.DailyActionSummaries.AnyAsync(
-            summary => summary.Date.HasValue && summary.Date >= start && summary.Date < end,
-            cancellationToken);
+        var hasSummaries = await (from summary in _dbContext.DailyActionSummaries
+                join taskExecutionFile in _dbContext.TaskExecutionFiles
+                    on summary.TaskExecutionFileId equals taskExecutionFile.Id
+                where taskExecutionFile.ReportDate == date
+                select summary.Id)
+            .AnyAsync(cancellationToken);
 
         return hasSummaries;
     }
